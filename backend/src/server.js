@@ -6,7 +6,9 @@ import { buildRecommendation } from "./recommendationEngine.js";
 const app = express();
 const PORT = process.env.PORT || 4000;
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY || "YOUR_OPENWEATHER_KEY_HERE";
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://localhost:8002";
+// const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://localhost:8002";
+// const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "https://blue-regions-pay.loca.lt";
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://10.69.91.198:8002";
 
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
@@ -64,16 +66,16 @@ async function classifyLeaf(imageBase64, crop, extra = {}) {
         typeof raw.confidence === "number"
           ? raw.confidence
           : typeof raw.probability === "number"
-          ? raw.probability
-          : 0.7;
+            ? raw.probability
+            : 0.7;
       const severity =
         typeof raw.severity === "string"
           ? raw.severity.toLowerCase()
           : confidence > 0.85
-          ? "severe"
-          : confidence > 0.7
-          ? "moderate"
-          : "mild";
+            ? "severe"
+            : confidence > 0.7
+              ? "moderate"
+              : "mild";
 
       return {
         crop: raw.crop || crop || "unknown",

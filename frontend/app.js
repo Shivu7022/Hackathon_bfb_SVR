@@ -1,4 +1,7 @@
-const backendBaseUrl = "http://localhost:4000";
+// const backendBaseUrl = "http://localhost:4000";
+// const backendBaseUrl = "https://long-papayas-push.loca.lt";
+const backendBaseUrl = "http://10.69.91.198:4000";
+
 
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
@@ -62,10 +65,10 @@ function detectGPS() {
       (err) => {
         let msg = "GPS error: ";
         switch (err.code) {
-          case err.PERMISSION_DENIED:    msg += "Location permission denied. Please allow it in browser settings."; break;
+          case err.PERMISSION_DENIED: msg += "Location permission denied. Please allow it in browser settings."; break;
           case err.POSITION_UNAVAILABLE: msg += "Location unavailable. Try outdoors or check device settings."; break;
-          case err.TIMEOUT:              msg += "GPS timed out. Try again."; break;
-          default:                       msg += err.message;
+          case err.TIMEOUT: msg += "GPS timed out. Try again."; break;
+          default: msg += err.message;
         }
         gpsStatus.textContent = "⚠️ " + msg;
         gpsStatus.style.color = "#f87171";
@@ -213,22 +216,18 @@ function renderResult(data) {
     )}% &nbsp; | &nbsp; Severity: ${mlResult.severity}</div>`;
   }
   if (weather) {
-    html += `<div style="margin-top:6px;"><span class="pill">Weather</span> Temp: ${
-      weather.temperature ?? "NA"
-    }°C, Humidity: ${weather.humidity ?? "NA"}%, Rain soon: ${
-      weather.rainExpected ? "Yes" : "No/Unknown"
-    }</div>`;
+    html += `<div style="margin-top:6px;"><span class="pill">Weather</span> Temp: ${weather.temperature ?? "NA"
+      }°C, Humidity: ${weather.humidity ?? "NA"}%, Rain soon: ${weather.rainExpected ? "Yes" : "No/Unknown"
+      }</div>`;
   } else {
     html += `<div style="margin-top:6px;"><span class="pill">Weather</span> Weather data not available (missing API key or location).</div>`;
   }
   if (recommendation) {
     html += `<div style="margin-top:10px;"><span class="pill">Recommendation</span></div>`;
-    html += `<div style="margin-top:4px;">Use <strong>${recommendation.pesticide}</strong> at <strong>${
-      recommendation.dosePerLitreMl
-    } ml/litre</strong> of water.</div>`;
-    html += `<div>Spray every <strong>${recommendation.intervalDays} days</strong> for about <strong>${
-      recommendation.sprays
-    } sprays</strong>, adjusting based on field observation.</div>`;
+    html += `<div style="margin-top:4px;">Use <strong>${recommendation.pesticide}</strong> at <strong>${recommendation.dosePerLitreMl
+      } ml/litre</strong> of water.</div>`;
+    html += `<div>Spray every <strong>${recommendation.intervalDays} days</strong> for about <strong>${recommendation.sprays
+      } sprays</strong>, adjusting based on field observation.</div>`;
     if (recommendation.precautions && recommendation.precautions.length) {
       html += `<ul style="margin-top:4px;padding-left:18px;font-size:0.8rem;">${recommendation.precautions
         .map((p) => `<li>${p}</li>`)
@@ -283,7 +282,7 @@ btnStartCamera?.addEventListener("click", startCamera);
 btnCapture?.addEventListener("click", captureFrame);
 fileInput?.addEventListener("change", handleFileUpload);
 btnAnalyze?.addEventListener("click", analyzeImage);
-btnGps?.addEventListener("click", () => detectGPS().catch(() => {}));
+btnGps?.addEventListener("click", () => detectGPS().catch(() => { }));
 btnSendChat?.addEventListener("click", sendChat);
 chatInput?.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
