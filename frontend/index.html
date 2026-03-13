@@ -136,6 +136,21 @@
         display: inline-block;
         margin-left: 6px;
       }
+      .btn-gps {
+        background: linear-gradient(to right, #3b82f6, #1d4ed8);
+        color: #fff;
+        font-size: 0.85rem;
+        padding: 8px 14px;
+        width: 100%;
+        justify-content: center;
+      }
+      .gps-status {
+        font-size: 0.75rem;
+        color: #9ca3af;
+        margin-top: -4px;
+        margin-bottom: 6px;
+        min-height: 16px;
+      }
     </style>
   </head>
   <body>
@@ -167,6 +182,8 @@
             <input id="lon" type="number" step="0.000001" placeholder="77.5946" />
           </div>
         </div>
+        <button id="btn-gps" class="btn-gps">📍 Detect My Location (GPS)</button>
+        <div class="gps-status" id="gps-status">Tap above to auto-fill your GPS location.</div>
 
         <div class="row">
           <div>

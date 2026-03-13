@@ -7,6 +7,8 @@ const fileInput = document.getElementById("file-input");
 const btnStartCamera = document.getElementById("btn-start-camera");
 const btnCapture = document.getElementById("btn-capture");
 const btnAnalyze = document.getElementById("btn-analyze");
+const btnGps = document.getElementById("btn-gps");
+const gpsStatus = document.getElementById("gps-status");
 const resultDiv = document.getElementById("result");
 const cropSelect = document.getElementById("crop");
 const latInput = document.getElementById("lat");
@@ -21,6 +23,67 @@ const btnSendChat = document.getElementById("btn-send-chat");
 let currentImageBase64 = null;
 let currentContext = null;
 let mediaStream = null;
+
+/** Detect GPS location using the browser Geolocation API */
+function detectGPS() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      gpsStatus.textContent = "⚠️ Geolocation is not supported by your browser.";
+      gpsStatus.style.color = "#f87171";
+      reject(new Error("Geolocation not supported"));
+      return;
+    }
+
+    if (btnGps) {
+      btnGps.textContent = "⏳ Detecting location...";
+      btnGps.disabled = true;
+    }
+    gpsStatus.textContent = "Waiting for GPS signal...";
+    gpsStatus.style.color = "#9ca3af";
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const acc = Math.round(position.coords.accuracy);
+
+        if (latInput) latInput.value = lat.toFixed(6);
+        if (lonInput) lonInput.value = lon.toFixed(6);
+
+        gpsStatus.textContent = `✅ Location detected: ${lat.toFixed(4)}, ${lon.toFixed(4)} (±${acc}m)`;
+        gpsStatus.style.color = "#4ade80";
+
+        if (btnGps) {
+          btnGps.textContent = "📍 Detect My Location (GPS)";
+          btnGps.disabled = false;
+        }
+        resolve({ lat, lon });
+      },
+      (err) => {
+        let msg = "GPS error: ";
+        switch (err.code) {
+          case err.PERMISSION_DENIED:    msg += "Location permission denied. Please allow it in browser settings."; break;
+          case err.POSITION_UNAVAILABLE: msg += "Location unavailable. Try outdoors or check device settings."; break;
+          case err.TIMEOUT:              msg += "GPS timed out. Try again."; break;
+          default:                       msg += err.message;
+        }
+        gpsStatus.textContent = "⚠️ " + msg;
+        gpsStatus.style.color = "#f87171";
+
+        if (btnGps) {
+          btnGps.textContent = "📍 Detect My Location (GPS)";
+          btnGps.disabled = false;
+        }
+        reject(new Error(msg));
+      },
+      {
+        enableHighAccuracy: true,   // Use GPS chip on mobile
+        timeout: 15000,             // 15s timeout
+        maximumAge: 60000           // Accept cached position up to 1 min old
+      }
+    );
+  });
+}
 
 async function startCamera() {
   try {
@@ -91,10 +154,7 @@ async function analyzeImage() {
     crop,
     location:
       !isNaN(lat) && !isNaN(lon)
-        ? {
-            lat,
-            lon
-          }
+        ? { lat, lon }
         : null,
     soil: {
       ph: soilPh,
@@ -102,6 +162,16 @@ async function analyzeImage() {
     },
     userId: "demo-user-1"
   };
+
+  // If lat/lon are still empty, try to auto-detect GPS silently
+  if (isNaN(lat) || isNaN(lon)) {
+    try {
+      const coords = await detectGPS();
+      payload.location = { lat: coords.lat, lon: coords.lon };
+    } catch (_) {
+      // GPS failed — proceed without location
+    }
+  }
 
   resultDiv.textContent = "Analyzing leaf and fetching weather...";
   try {
@@ -213,6 +283,7 @@ btnStartCamera?.addEventListener("click", startCamera);
 btnCapture?.addEventListener("click", captureFrame);
 fileInput?.addEventListener("change", handleFileUpload);
 btnAnalyze?.addEventListener("click", analyzeImage);
+btnGps?.addEventListener("click", () => detectGPS().catch(() => {}));
 btnSendChat?.addEventListener("click", sendChat);
 chatInput?.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
