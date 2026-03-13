@@ -6,7 +6,7 @@ import { buildRecommendation } from "./recommendationEngine.js";
 const app = express();
 const PORT = process.env.PORT || 4000;
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY || "YOUR_OPENWEATHER_KEY_HERE";
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://localhost:8000";
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://localhost:8002";
 
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
