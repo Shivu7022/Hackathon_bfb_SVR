@@ -1,0 +1,29 @@
+# Node / Backend
+node_modules/
+.env
+npm-debug.log*
+
+# Python / ML Service
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+.pytest_cache/
+runs/
+
+# Large Model Files & Datasets
+*.pt
+*.pth
+dataset/
+resnet_classes.txt
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
