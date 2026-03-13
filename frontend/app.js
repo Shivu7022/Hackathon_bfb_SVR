@@ -194,6 +194,7 @@ async function analyzeImage() {
     }
 
     currentContext = data;
+    window.currentContext = data; // Expose for KrishiBot
     renderResult(data);
     appendChatMessage(
       "bot",

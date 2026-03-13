@@ -1,11 +1,15 @@
 import express from "express";
 import cors from "cors";
 import axios from "axios";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { buildRecommendation } from "./recommendationEngine.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY || "YOUR_OPENWEATHER_KEY_HERE";
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
+
+const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
 // const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://localhost:8002";
 // const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "https://blue-regions-pay.loca.lt";
 const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://10.69.91.198:8002";
@@ -232,6 +236,47 @@ app.post("/api/chat", (req, res) => {
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
+});
+
+/** Gemini-powered farming assistant */
+app.post("/api/gemini", async (req, res) => {
+  const { message, context } = req.body || {};
+
+  if (!message) {
+    return res.status(400).json({ error: "message is required" });
+  }
+
+  if (!genAI) {
+    return res.status(503).json({
+      error: "Gemini API key not configured. Set GEMINI_API_KEY environment variable."
+    });
+  }
+
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    // Build a system context preamble
+    const systemContext = `You are KrishiBot, a friendly and knowledgeable AI assistant for Indian farmers.
+- Respond in simple, clear language a farmer can understand.
+- If the farmer writes in Hindi, Kannada, Tamil, Marathi, or Punjabi, respond in that same language.
+- Focus on practical, actionable farming advice about crops, diseases, pesticides, weather, and soil.
+- Keep responses concise (2-4 sentences) unless the topic requires more detail.
+${
+  context?.diseaseLabel
+    ? `- The farmer is dealing with: ${context.diseaseLabel} on their ${context.crop || "crop"}. Severity: ${context.severity || "mild"}. Recommended pesticide: ${context.pesticide || "unknown"}.`
+    : ""
+}`;
+
+    const fullPrompt = `${systemContext}\n\nFarmer: ${message}\n\nKrishiBot:`;
+
+    const result = await model.generateContent(fullPrompt);
+    const text = result.response.text();
+
+    return res.json({ success: true, reply: text.trim() });
+  } catch (err) {
+    console.error("Gemini API error:", err.message);
+    return res.status(500).json({ error: "Failed to get response from Gemini: " + err.message });
+  }
 });
 
 app.listen(PORT, () => {
