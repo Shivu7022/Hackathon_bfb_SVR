@@ -38,14 +38,34 @@
             <div class="detection-layout">
                 <!-- Data Input Card -->
                 <div class="card">
-                    <div id="upload-trigger" class="upload-zone" onclick="document.getElementById('file-input').click()">
-                        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">📤</div>
-                        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Drop leaf image here</h3>
-                        <p style="color: var(--text-main); font-size: 0.9rem;">or click to browse files</p>
+                    <div id="upload-trigger">
+                        <!-- Two input method options shown side by side -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <!-- Upload Option -->
+                            <div class="upload-zone" onclick="document.getElementById('file-input').click()" style="cursor: pointer; padding: 2rem 1rem;">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">📁</div>
+                                <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem;">Upload Image</h3>
+                                <p style="color: var(--text-main); font-size: 0.8rem;">Browse from your device</p>
+                            </div>
+                            <!-- Camera Option -->
+                            <div class="upload-zone" id="btn-open-camera" style="cursor: pointer; padding: 2rem 1rem; border-color: #6366f1;" onclick="startCamera()">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">📷</div>
+                                <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem;">Take Photo</h3>
+                                <p style="color: var(--text-main); font-size: 0.8rem;">Use your device camera</p>
+                            </div>
+                        </div>
                         <input type="file" id="file-input" style="display: none;" accept="image/*" onchange="handleFileUpload(event)">
                     </div>
 
-                    <video id="video-feed" style="display: none; width: 100%; border-radius: 12px; margin-bottom: 1rem;"></video>
+                    <video id="video-feed" style="display: none; width: 100%; border-radius: 12px; margin-bottom: 0.75rem;" autoplay playsinline></video>
+                    <div id="camera-controls" style="display: none; margin-bottom: 1rem; display: none;">
+                        <button id="btn-capture-photo" onclick="captureFrame()" class="btn btn-primary" style="width: 100%; background: #6366f1; font-size: 1rem; padding: 0.85rem;">
+                            📸 Capture Photo
+                        </button>
+                        <button onclick="cancelCamera()" class="btn btn-ghost" style="width: 100%; margin-top: 0.5rem; color: var(--text-main); border: 1px solid var(--border-color);">
+                            ✕ Cancel
+                        </button>
+                    </div>
 
                     <div id="image-preview-container" style="display: none; margin-top: 1.5rem;">
                         <img id="preview" src="" alt="Preview" style="width: 100%; border-radius: 12px; border: 1px solid var(--border-color);">

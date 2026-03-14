@@ -83,9 +83,8 @@ async function startCamera() {
             // UI Transitions
             if (getEl("image-preview-container")) getEl("image-preview-container").style.display = "none";
             if (getEl("upload-trigger")) getEl("upload-trigger").style.display = "none";
-            
-            // Update button text to "Capture"
-            if (btnStartCamera) btnStartCamera.innerText = "📸 Capture Photo";
+            const camControls = getEl("camera-controls");
+            if (camControls) camControls.style.display = "block";
         }
     } catch (err) {
         console.error("Error starting camera:", err);
@@ -113,6 +112,8 @@ function captureFrame() {
         if (getEl("image-preview-container")) getEl("image-preview-container").style.display = "block";
         if (getEl("upload-trigger")) getEl("upload-trigger").style.display = "none";
         video.style.display = "none";
+        const camControls = getEl("camera-controls");
+        if (camControls) camControls.style.display = "none";
         
         // Reset button text
         if (btnStartCamera) btnStartCamera.innerText = "📷 Retake Photo";
@@ -246,17 +247,24 @@ function renderResult(data) {
     resultDiv.innerHTML = html;
 }
 
+function cancelCamera() {
+    if (mediaStream) {
+        mediaStream.getTracks().forEach(t => t.stop());
+        mediaStream = null;
+    }
+    const vid = getEl("video-feed");
+    if (vid) vid.style.display = "none";
+    const camControls = getEl("camera-controls");
+    if (camControls) camControls.style.display = "none";
+    const trigger = getEl("upload-trigger");
+    if (trigger) trigger.style.display = "block";
+}
+
 function resetDetection(mode) {
     localStorage.removeItem('krishi_result');
     localStorage.removeItem('krishi_image');
     currentImageBase64 = null;
-    
-    if (mode === 'upload') {
-        location.reload(); // Simplest way to reset the whole UI state
-    } else {
-        location.reload(); // We reload to ensure clean DOM, then startCamera on load if we wanted, 
-        // but for now simple reload is safest for the user to pick their path.
-    }
+    location.reload();
 }
 
 // Global Event Listeners
