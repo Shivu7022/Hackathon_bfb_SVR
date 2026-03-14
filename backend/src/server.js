@@ -31,9 +31,7 @@ function saveToHistory(record) {
 }
 
 const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
-// const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://localhost:8002";
-// const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "https://blue-regions-pay.loca.lt";
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://10.69.91.198:8000";
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://localhost:8000";
 
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
@@ -209,20 +207,7 @@ app.post("/api/predict-and-recommend", async (req, res) => {
   }
 });
 
-// Simple debug endpoint to check raw ML output without weather/recommendation
-app.post("/api/debug/ml", async (req, res) => {
-  try {
-    const { imageBase64, crop, location, soil } = req.body || {};
-    if (!imageBase64) {
-      return res.status(400).json({ error: "imageBase64 is required" });
-    }
-    const mlResult = await classifyLeaf(imageBase64, crop, { location, soil });
-    return res.json({ success: true, mlResult });
-  } catch (err) {
-    console.error("Error in /api/debug/ml:", err);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-});
+
 
 const KARNATAKA_DISTRICTS = {
   "Bengaluru Rural": { lat: 13.2503, lon: 77.2982 },
@@ -328,7 +313,7 @@ app.post("/api/gemini", async (req, res) => {
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     // Build a system context preamble
     const systemContext = `You are KrishiBot, a friendly and knowledgeable AI assistant for Indian farmers.

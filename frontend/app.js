@@ -9,16 +9,9 @@ const preview = getEl("preview");
 const fileInput = getEl("file-input");
 const btnStartCamera = getEl("btn-start-camera");
 const btnAnalyze = getEl("btn-analyze");
-const btnGps = getEl("btn-gps");
 const resultDiv = getEl("result");
 const resultPlaceholder = getEl("result-placeholder");
 const cropSelect = getEl("crop");
-const latInput = getEl("lat");
-const lonInput = getEl("lon");
-const chatWindow = getEl("chat-window");
-const chatInput = getEl("chat-input");
-const btnSendChat = getEl("btn-send-chat");
-const languageSelect = getEl("language");
 
 let currentImageBase64 = localStorage.getItem("krishi_image") || null;
 let currentContext = null;
@@ -51,9 +44,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 function saveCurrentState() {
     const ctx = {
-        crop: cropSelect?.value || "tomato",
-        lat: latInput?.value,
-        lon: lonInput?.value
+        crop: cropSelect?.value || "tomato"
     };
     localStorage.setItem("krishi_context", JSON.stringify(ctx));
     if (currentImageBase64) {
@@ -62,7 +53,6 @@ function saveCurrentState() {
 }
 
 async function startCamera() {
-    console.log("Starting camera...");
     try {
         if (mediaStream) {
             captureFrame();
@@ -93,7 +83,6 @@ async function startCamera() {
 }
 
 function captureFrame() {
-    console.log("Capturing frame...");
     if (!video || !video.videoWidth) return;
     
     const w = video.videoWidth;
