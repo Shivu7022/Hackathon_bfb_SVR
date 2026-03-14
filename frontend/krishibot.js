@@ -4,7 +4,7 @@
  */
 
 (function () {
-  const BACKEND = "http://localhost:4000";
+  const BACKEND = "http://10.69.91.198:4000";
 
   /* ── Detect mobile ──────────────────────────────────── */
   const isMobile = () => window.innerWidth <= 640;
@@ -276,7 +276,8 @@
       diseaseLabel: ctx.diseaseLabel,
       crop: ctx.crop,
       severity: ctx.severity,
-      pesticide: ctx.pesticide
+      pesticide: ctx.pesticide,
+      language: document.getElementById("language")?.value || "en"
     };
 
     try {

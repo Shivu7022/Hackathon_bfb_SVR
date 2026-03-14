@@ -1,8 +1,11 @@
 import express from "express";
 import cors from "cors";
 import axios from "axios";
+import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { buildRecommendation } from "./recommendationEngine.js";
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -253,7 +256,7 @@ app.post("/api/gemini", async (req, res) => {
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
     // Build a system context preamble
     const systemContext = `You are KrishiBot, a friendly and knowledgeable AI assistant for Indian farmers.
@@ -261,11 +264,10 @@ app.post("/api/gemini", async (req, res) => {
 - If the farmer writes in Hindi, Kannada, Tamil, Marathi, or Punjabi, respond in that same language.
 - Focus on practical, actionable farming advice about crops, diseases, pesticides, weather, and soil.
 - Keep responses concise (2-4 sentences) unless the topic requires more detail.
-${
-  context?.diseaseLabel
-    ? `- The farmer is dealing with: ${context.diseaseLabel} on their ${context.crop || "crop"}. Severity: ${context.severity || "mild"}. Recommended pesticide: ${context.pesticide || "unknown"}.`
-    : ""
-}`;
+${context?.diseaseLabel
+        ? `- The farmer is dealing with: ${context.diseaseLabel} on their ${context.crop || "crop"}. Severity: ${context.severity || "mild"}. Recommended pesticide: ${context.pesticide || "unknown"}.`
+        : ""
+      }`;
 
     const fullPrompt = `${systemContext}\n\nFarmer: ${message}\n\nKrishiBot:`;
 
