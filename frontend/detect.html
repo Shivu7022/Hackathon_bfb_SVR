@@ -40,7 +40,7 @@
                     <div id="upload-trigger" class="upload-zone" onclick="document.getElementById('file-input').click()">
                         <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">📤</div>
                         <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Drop leaf image here</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem;">or click to browse files</p>
+                        <p style="color: var(--text-main); font-size: 0.9rem;">or click to browse files</p>
                         <input type="file" id="file-input" style="display: none;" accept="image/*" onchange="handleFileUpload(event)">
                     </div>
 
@@ -52,7 +52,7 @@
                             <button id="btn-start-camera" class="btn btn-primary" style="flex: 1; min-width: 150px;">
                                 📷 Retake Photo
                             </button>
-                            <button id="btn-upload-new" class="btn btn-ghost" style="flex: 1; min-width: 150px; border: 1px solid var(--border-color);" onclick="document.getElementById('file-input').click()">
+                            <button id="btn-upload-new" class="btn btn-ghost" style="flex: 1; min-width: 150px; border: 1px solid var(--border-color); color: var(--text-main);" onclick="document.getElementById('file-input').click()">
                                 📁 Upload Different
                             </button>
                             <button id="btn-analyze" class="btn btn-primary" style="flex: 1; min-width: 150px; background: #6366f1;">
