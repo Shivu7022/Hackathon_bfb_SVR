@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Health | CropGuard AI</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <header class="main-header">
+        <a href="index.html" class="logo-group">
+            <div class="logo-icon">🌿</div>
+            <span>CropGuard AI</span>
+        </a>
+        <button id="menu-toggle" class="menu-toggle">☰</button>
+        <nav id="nav-links" class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="detect.html" class="nav-link">Disease Detection</a>
+            <a href="dashboard.html" class="nav-link">Sensor Dashboard</a>
+            <a href="health.html" class="nav-link active">Crop Health</a>
+            <a href="assistant.html" class="nav-link">AI Assistant</a>
+        </nav>
+        <div style="width: 150px; text-align: right; display: none;">
+            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Sign In</button>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h1 style="font-size: 2.25rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">
+                Crop Health <span style="color: var(--primary);">Monitoring</span>
+            </h1>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                Track all detected crop diseases across your farms.
+            </p>
+
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div style="position: relative; width: 300px; max-width: 100%;">
+                        <input type="text" class="form-input" placeholder="Search plant, disease, or region..." style="width: 100%; padding-left: 2.5rem;">
+                        <span style="position: absolute; left: 0.75rem; top: 0.75rem;">🔍</span>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <select class="form-input" style="padding: 0.5rem;">
+                            <option>All Severity</option>
+                            <option>High</option>
+                            <option>Medium</option>
+                            <option>Low</option>
+                        </select>
+                        <select class="form-input" style="padding: 0.5rem;">
+                            <option>Sort: Date</option>
+                            <option>Sort: Confidence</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="health-table">
+                        <thead>
+                            <tr>
+                                <th>Plant</th>
+                                <th>Disease</th>
+                                <th>Severity</th>
+                                <th>Health Score</th>
+                                <th>Region</th>
+                                <th>Timestamp</th>
+                                <th>Report</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            <!-- Live data will be injected here -->
+                            <tr><td colspan="7" style="text-align: center; padding: 2rem;">Loading detection history...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="report.js"></script>
+    <script src="app.js"></script>
+    <script>
+        const BACKEND_URL = "http://10.69.91.198:4000";
+
+        async function loadHistory() {
+            const tableBody = document.getElementById('history-table-body');
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/history`);
+                const data = await res.json();
+
+                if (data.success && data.history && data.history.length > 0) {
+                    tableBody.innerHTML = '';
+                    data.history.forEach(item => {
+                        const tr = document.createElement('tr');
+                        
+                        const severityClass = `badge-severity severity-${item.severity.toLowerCase()}`;
+                        const healthScore = item.severity.toLowerCase() === 'mild' ? 70 : (item.severity.toLowerCase() === 'moderate' ? 45 : 20);
+                        const progressColor = item.severity.toLowerCase() === 'mild' ? '#16a34a' : (item.severity.toLowerCase() === 'moderate' ? '#d97706' : '#ef4444');
+                        const date = new Date(item.timestamp).toLocaleString();
+
+                        tr.innerHTML = `
+                            <td><strong>${item.crop}</strong></td>
+                            <td><span style="color: ${progressColor}">${item.disease}</span></td>
+                            <td><span class="${severityClass}">${item.severity}</span></td>
+                            <td>
+                                <div class="progress-container"><div class="progress-bar" style="width: ${healthScore}%; background: ${progressColor};"></div></div>
+                                <span style="font-size: 0.75rem; color: var(--text-muted);">${healthScore}%</span>
+                            </td>
+                            <td>${item.region}</td>
+                            <td>${date}</td>
+                            <td><button class="btn-download" title="Download Report">📥</button></td>
+                        `;
+                        
+                        const downloadBtn = tr.querySelector('.btn-download');
+                        downloadBtn.onclick = () => downloadReport(item.crop, item.disease, item.severity, item.region, date, item.recommendation);
+                        
+                        tableBody.appendChild(tr);
+                    });
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">No detection history found. Start scanning crops to see records!</td></tr>';
+                }
+            } catch (err) {
+                console.error("Failed to load history:", err);
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: #ef4444;">Failed to load history. Please check if the backend is running.</td></tr>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadHistory);
+    </script>
+</body>
+</html>

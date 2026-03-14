@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Act | Krishi-Vision 360</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body class="page-wrapper">
+    <header class="internal-header">
+        <a href="index.html" class="btn-back">← Back to Hub</a>
+        <div class="logo-container" style="position: static;">
+            <span class="logo-icon">🍃</span>
+            <span>Krishi-Vision 360</span>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <div class="card">
+            <h2>🤝 Take Action</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">
+                Connect with local vendors for pesticide supplies or hire certified sprayers.
+            </p>
+            <div style="background: var(--glass); padding: 20px; border-radius: 12px; border: 1px solid var(--glass-border);">
+                <p>🛒 Marketplace: <strong>Nearby Shops Found (3)</strong></p>
+                <p style="font-size: 0.85rem; margin-top: 5px;">📍 Distance: Within 5km radius of your detected farm.</p>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button class="btn-primary" style="width: 100%;">Contact Nearest Vendor</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💬 Expert Advice</h2>
+            <div id="chat-window" class="chat-window"></div>
+            <div class="row" style="grid-template-columns: 1fr auto;">
+                <input id="chat-input" type="text" placeholder="Ask about marketplace prices...">
+                <button id="btn-send-chat" class="btn-primary">Send ➤</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script src="krishibot.js"></script>
+</body>
+</html>

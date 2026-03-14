@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescribe | Krishi-Vision 360</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body class="page-wrapper">
+    <header class="internal-header">
+        <a href="analyze.html" class="btn-back">← Back to Analyze</a>
+        <div class="logo-container" style="position: static;">
+            <span class="logo-icon">🍃</span>
+            <span>Krishi-Vision 360</span>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <div class="card">
+            <h2>🩺 Treatment Guide</h2>
+            <div id="result" class="result-box">
+                No diagnosis found. Please scan your crop first.
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💬 Chat with Expert Bot</h2>
+            <div id="chat-window" class="chat-window"></div>
+            <div class="row" style="grid-template-columns: 1fr auto;">
+                <input id="chat-input" type="text" placeholder="Ask about safety precautions...">
+                <button id="btn-send-chat" class="btn-primary">Send ➤</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script src="krishibot.js"></script>
+</body>
+</html>

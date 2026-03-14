@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant | CropGuard AI</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <header class="main-header">
+        <a href="index.html" class="logo-group">
+            <div class="logo-icon">🌿</div>
+            <span>CropGuard AI</span>
+        </a>
+        <button id="menu-toggle" class="menu-toggle">☰</button>
+        <nav id="nav-links" class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="detect.html" class="nav-link">Disease Detection</a>
+            <a href="dashboard.html" class="nav-link">Sensor Dashboard</a>
+            <a href="health.html" class="nav-link">Crop Health</a>
+            <a href="assistant.html" class="nav-link active">AI Assistant</a>
+        </nav>
+        <div style="width: 150px; text-align: right; display: none;">
+            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Sign In</button>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+            <h1 style="font-size: 2.25rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">
+                AI Farming <span style="color: var(--primary);">Assistant</span>
+            </h1>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                Ask questions about crop diseases, treatments, and farming practices.
+            </p>
+
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap;">
+                <button class="btn btn-ghost" style="color: var(--text-main); border: 1px solid #e2e8f0; font-size: 0.85rem; border-radius: 99px;" onclick="setPrompt('What are common crop diseases?')">What are common crop diseases?</button>
+                <button class="btn btn-ghost" style="color: var(--text-main); border: 1px solid #e2e8f0; font-size: 0.85rem; border-radius: 99px;" onclick="setPrompt('Recommend pesticides for tomato blight')">Recommend pesticides for tomato blight</button>
+                <button class="btn btn-ghost" style="color: var(--text-main); border: 1px solid #e2e8f0; font-size: 0.85rem; border-radius: 99px;" onclick="setPrompt('Best fertilizer for rice crops')">Best fertilizer for rice crops</button>
+                <button class="btn btn-ghost" style="color: var(--text-main); border: 1px solid #e2e8f0; font-size: 0.85rem; border-radius: 99px;" onclick="setPrompt('Irrigation tips for dry season')">Irrigation tips for dry season</button>
+            </div>
+
+            <div class="chat-container">
+                <div id="chat-window" class="chat-messages">
+                    <div class="message message-bot">
+                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                            <div style="background: var(--primary-light); color: var(--primary); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">🤖</div>
+                            <div>
+                                <p>I'm your AI farming assistant! I can help with crop diseases, pesticide recommendations, fertilizers, irrigation advice, and prevention methods. What would you like to know?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-area">
+                    <div style="position: relative; flex: 1; display: flex; align-items: center;">
+                        <button id="btn-mic" class="btn" style="position: absolute; left: 0.5rem; background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.5rem;">🎙️</button>
+                        <input id="chat-input" type="text" class="form-input" placeholder="Ask about crops, diseases, or treatments..." style="padding-left: 2.75rem; width: 100%;">
+                    </div>
+                    <button id="btn-send-chat" class="btn btn-primary" style="padding: 0.75rem;">
+                        <span style="transform: rotate(45deg);">➤</span>
+                    </button>
+                </div>
+                <div style="padding: 0.5rem 1.5rem; background: #f8fafc; border-top: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🌐 Language:</span>
+                        <select id="language" class="form-input" style="padding: 0.1rem 0.5rem; font-size: 0.75rem; width: auto;">
+                            <option value="en">English</option>
+                            <option value="hi">Hindi (हिंदी)</option>
+                            <option value="kn">Kannada (ಕನ್ನಡ)</option>
+                            <option value="ta">Tamil (தமிழ்)</option>
+                            <option value="mr">Marathi (मराठी)</option>
+                            <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
+                        </select>
+                    </div>
+                    <span id="recording-status" style="color: #ef4444; font-weight: 700; display: none;">🔴 Recording...</span>
+                    <span>🔊 Multi-lingual Voice Support Enabled</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script src="krishibot.js"></script>
+    <script>
+        function setPrompt(text) {
+            document.getElementById('chat-input').value = text;
+        }
+    </script>
+</body>
+</html>

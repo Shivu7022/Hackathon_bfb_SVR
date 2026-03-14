@@ -1,6 +1,7 @@
 # Node / Backend
 node_modules/
 .env
+history.json
 npm-debug.log*
 
 # Python / ML Service

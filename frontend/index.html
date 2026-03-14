@@ -1,266 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smart Leaf Doctor</title>
-    <style>
-      body {
-        margin: 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: #0f172a;
-        color: #f9fafb;
-        display: flex;
-        justify-content: center;
-        align-items: stretch;
-        min-height: 100vh;
-      }
-      .app {
-        width: 100%;
-        max-width: 480px;
-        padding: 16px;
-        box-sizing: border-box;
-      }
-      .card {
-        background: #020617;
-        border-radius: 16px;
-        padding: 16px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(148, 163, 184, 0.3);
-        margin-bottom: 16px;
-      }
-      h1 {
-        font-size: 1.5rem;
-        margin: 0 0 8px;
-      }
-      h2 {
-        font-size: 1.1rem;
-        margin-top: 0;
-      }
-      .subtitle {
-        font-size: 0.9rem;
-        color: #9ca3af;
-      }
-      label {
-        font-size: 0.85rem;
-        color: #cbd5f5;
-        display: block;
-        margin-bottom: 4px;
-      }
-      input,
-      select,
-      textarea {
-        width: 100%;
-        padding: 8px 10px;
-        border-radius: 10px;
-        border: 1px solid #334155;
-        background: #020617;
-        color: #e5e7eb;
-        box-sizing: border-box;
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-      }
-      textarea {
-        resize: vertical;
-        min-height: 60px;
-      }
-      button {
-        border: none;
-        border-radius: 999px;
-        padding: 10px 16px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .btn-primary {
-        background: linear-gradient(to right, #22c55e, #16a34a);
-        color: #022c22;
-      }
-      .btn-secondary {
-        background: #0f172a;
-        color: #e5e7eb;
-        border: 1px solid #334155;
-      }
-      .row {
-        display: flex;
-        gap: 8px;
-      }
-      .row > div {
-        flex: 1;
-      }
-      video,
-      canvas,
-      img {
-        width: 100%;
-        border-radius: 14px;
-        background: #020617;
-      }
-      .pill {
-        display: inline-block;
-        padding: 4px 8px;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        background: #0f766e;
-        color: #ecfeff;
-        margin-right: 4px;
-        margin-top: 4px;
-      }
-      .chat-window {
-        max-height: 220px;
-        overflow-y: auto;
-        padding: 8px;
-        border-radius: 12px;
-        background: #020617;
-        border: 1px solid #1f2937;
-        margin-bottom: 8px;
-        font-size: 0.85rem;
-      }
-      .msg {
-        margin-bottom: 6px;
-      }
-      .msg-user {
-        color: #a5b4fc;
-      }
-      .msg-bot {
-        color: #bbf7d0;
-      }
-      .badge {
-        padding: 2px 8px;
-        border-radius: 999px;
-        font-size: 0.7rem;
-        background: #1e293b;
-        color: #e5e7eb;
-        display: inline-block;
-        margin-left: 6px;
-      }
-      .btn-gps {
-        background: linear-gradient(to right, #3b82f6, #1d4ed8);
-        color: #fff;
-        font-size: 0.85rem;
-        padding: 8px 14px;
-        width: 100%;
-        justify-content: center;
-        margin-bottom: 8px;
-      }
-      .gps-status {
-        font-size: 0.75rem;
-        color: #9ca3af;
-        margin-top: -4px;
-        margin-bottom: 6px;
-        min-height: 16px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="app">
-      <div class="card">
-        <h1>Smart Leaf Doctor</h1>
-        <div class="subtitle">
-          Capture leaf image with mobile microscope, add soil and location, and get disease
-          diagnosis plus local-language advice.
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CropGuard AI | Smart Agriculture Hub</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <header class="main-header">
+        <a href="index.html" class="logo-group">
+            <div class="logo-icon">🌿</div>
+            <span>CropGuard AI</span>
+        </a>
+        <button id="menu-toggle" class="menu-toggle">☰</button>
+        <nav id="nav-links" class="nav-links">
+            <a href="index.html" class="nav-link active">Home</a>
+            <a href="detect.html" class="nav-link">Disease Detection</a>
+            <a href="dashboard.html" class="nav-link">Sensor Dashboard</a>
+            <a href="health.html" class="nav-link">Crop Health</a>
+            <a href="assistant.html" class="nav-link">AI Assistant</a>
+        </nav>
+        <div style="width: 150px; text-align: right; display: none;">
+            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Sign In</button>
         </div>
-      </div>
+    </header>
 
-      <div class="card">
-        <h2>1. Crop & Soil</h2>
-        <label for="crop">Crop</label>
-        <select id="crop">
-          <option value="tomato">Tomato</option>
-          <option value="rice">Rice</option>
-          <option value="other">Other</option>
-        </select>
+    <main>
+        <section class="hero-section" style="background-image: url('drone_field_background_1773454347305.png');">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <div class="badge-ai">
+                    <span>✨</span>
+                    <span>AI-Powered Smart Agriculture</span>
+                </div>
+                <h1 class="hero-title">AI Crop Disease <span>Early</span> Detection System</h1>
+                <p class="hero-subtitle">
+                    Detect plant diseases early using artificial intelligence and smart farming technology. 
+                    Protect your harvest with real-time monitoring and expert recommendations.
+                </p>
+                <div class="hero-buttons">
+                    <a href="detect.html" class="btn btn-primary">
+                        <span>📤</span>
+                        <span>Upload Leaf Image</span>
+                    </a>
+                    <a href="dashboard.html" class="btn btn-ghost">
+                        <span>📊</span>
+                        <span>Open Dashboard</span>
+                    </a>
+                    <a href="assistant.html" class="btn btn-ghost">
+                        <span>💬</span>
+                        <span>Chat with AI</span>
+                    </a>
+                </div>
+            </div>
+        </section>
 
-        <div class="row">
-          <div>
-            <label for="lat">Latitude</label>
-            <input id="lat" type="number" step="0.000001" placeholder="12.9716" />
-          </div>
-          <div>
-            <label for="lon">Longitude</label>
-            <input id="lon" type="number" step="0.000001" placeholder="77.5946" />
-          </div>
-        </div>
-        <button id="btn-gps" class="btn-gps">📍 Detect My Location (GPS)</button>
-        <div class="gps-status" id="gps-status">Tap above to auto-fill your GPS location.</div>
+        <!-- Process description grid from reference if needed, otherwise just keep it clean -->
+    </main>
 
-        <div class="row">
-          <div>
-            <label for="soil-ph">Soil pH</label>
-            <input id="soil-ph" type="number" step="0.1" placeholder="6.5" />
-          </div>
-          <div>
-            <label for="soil-n">Nitrogen level</label>
-            <select id="soil-n">
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-              <option value="high">High</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>2. Capture Leaf Image</h2>
-        <div style="margin-bottom: 8px; display: flex; flex-wrap: wrap; gap: 8px;">
-          <button id="btn-start-camera" class="btn-secondary">Open camera</button>
-          <button id="btn-capture" class="btn-primary">Capture</button>
-          <label
-            for="file-input"
-            class="btn-secondary"
-            style="display: inline-flex; align-items: center; justify-content: center; cursor: pointer;"
-            >Upload image</label
-          >
-          <input
-            id="file-input"
-            type="file"
-            accept="image/*"
-            style="display: none;"
-          />
-        </div>
-        <video id="video" autoplay playsinline></video>
-        <canvas id="canvas" style="display: none;"></canvas>
-        <img id="preview" alt="Captured preview" style="margin-top: 8px; display: none;" />
-        <div class="subtitle">Use your mobile microscope on the leaf and tap capture.</div>
-      </div>
-
-      <div class="card">
-        <h2>3. Get Diagnosis</h2>
-        <button id="btn-analyze" class="btn-primary">Analyze &amp; Recommend</button>
-        <div id="result" style="margin-top: 10px; font-size: 0.9rem;"></div>
-      </div>
-
-      <div class="card">
-        <h2>
-          4. Chat with KrishiBot
-          <span class="badge">kn / hi / en / ta / mr / pa</span>
-        </h2>
-        <label for="language">Language</label>
-        <select id="language">
-          <option value="kn">Kannada</option>
-          <option value="hi">Hindi</option>
-          <option value="en">English</option>
-          <option value="ta">Tamil</option>
-          <option value="mr">Marathi</option>
-          <option value="pa">Punjabi</option>
-        </select>
-
-        <div class="chat-window" id="chat-window"></div>
-        <div class="row">
-          <input
-            id="chat-input"
-            type="text"
-            placeholder="Ask about spraying, safety, cost..."
-          />
-          <button id="btn-send-chat" class="btn-secondary">Send</button>
-        </div>
-      </div>
-    </div>
-
-    <script src="./app.js"></script>
-    <script src="./krishibot.js"></script>
-  </body>
-  </html>
-
+    <script src="app.js"></script>
+</body>
+</html>

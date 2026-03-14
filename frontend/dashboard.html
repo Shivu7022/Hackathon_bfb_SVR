@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard | CropGuard AI</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <header class="main-header">
+        <a href="index.html" class="logo-group">
+            <div class="logo-icon">🌿</div>
+            <span>CropGuard AI</span>
+        </a>
+        <button id="menu-toggle" class="menu-toggle">☰</button>
+        <nav id="nav-links" class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="detect.html" class="nav-link">Disease Detection</a>
+            <a href="dashboard.html" class="nav-link active">Sensor Dashboard</a>
+            <a href="health.html" class="nav-link">Crop Health</a>
+            <a href="assistant.html" class="nav-link">AI Assistant</a>
+        </nav>
+        <div style="width: 150px; text-align: right; display: none;">
+            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Sign In</button>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h1 style="font-size: 2.25rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">
+                Karnataka <span style="color: var(--primary);">Weather Dashboard</span>
+            </h1>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                Live weather monitoring for Karnataka's agricultural districts.
+            </p>
+
+            <div class="card" style="margin-bottom: 2rem;">
+                <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;" id="district-selector">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted);">
+                        <span>📍</span>
+                        <span style="font-weight: 600;">District:</span>
+                    </div>
+                    <button class="btn btn-primary district-btn" data-district="Bengaluru Rural" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 99px;">Bengaluru Rural</button>
+                    <button class="btn btn-ghost district-btn" data-district="Mysuru" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 99px; color: var(--text-main); border: 1px solid #e2e8f0;">Mysuru</button>
+                    <button class="btn btn-ghost district-btn" data-district="Belagavi" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 99px; color: var(--text-main); border: 1px solid #e2e8f0;">Belagavi</button>
+                    <button class="btn btn-ghost district-btn" data-district="Dharwad" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 99px; color: var(--text-main); border: 1px solid #e2e8f0;">Dharwad</button>
+                    <button class="btn btn-ghost district-btn" data-district="Raichur" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 99px; color: var(--text-main); border: 1px solid #e2e8f0;">Raichur</button>
+                    <button class="btn btn-ghost district-btn" data-district="Shimoga" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 99px; color: var(--text-main); border: 1px solid #e2e8f0;">Shimoga</button>
+                    <button id="btn-gps" class="btn btn-ghost" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 99px; color: var(--text-main); border: 1px solid #e2e8f0; background: #f1f5f9;">
+                        🗺️ Detect My Farm
+                    </button>
+                    <button id="btn-refresh" class="btn btn-ghost" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 99px; color: var(--text-main); border: none;">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <div id="weather-alert" class="card" style="background: #fff5f5; border-color: #feb2b2; margin-bottom: 2rem; display: none;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span style="font-size: 1.5rem;">⚠️</span>
+                    <p id="alert-text" style="color: #c53030; font-weight: 500;">Failed to fetch live sensor data.</p>
+                </div>
+            </div>
+
+            <div id="weather-display" class="dashboard-grid">
+                 <!-- Weather info injected here -->
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        const API_URL = "http://10.69.91.198:4000/api/weather";
+        let currentDistrict = "Bengaluru Rural";
+
+        async function fetchWeather(district) {
+            const display = document.getElementById('weather-display');
+            const alertBox = document.getElementById('weather-alert');
+            
+            // Loading state
+            display.style.opacity = '0.5';
+            
+            try {
+                const res = await fetch(`${API_URL}?district=${encodeURIComponent(district)}`);
+                const result = await res.json();
+                
+                if (result.success) {
+                    const data = result.data;
+                    alertBox.style.display = 'none';
+                    renderWeather(data);
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (err) {
+                console.error("Dashboard error:", err);
+                alertBox.style.display = 'block';
+                document.getElementById('alert-text').innerText = "Sensor Error: " + err.message;
+            } finally {
+                display.style.opacity = '1';
+            }
+        }
+
+        function renderWeather(data) {
+            const display = document.getElementById('weather-display');
+            display.innerHTML = `
+                <div class="card">
+                    <h3 style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 1rem;">Temperature</h3>
+                    <p style="font-size: 2.5rem; font-weight: 700;">${Math.round(data.temperature)}°C</p>
+                    <p style="color: var(--primary); font-size: 0.9rem; margin-top: 0.5rem;">Live from OpenWeather</p>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 1rem;">Humidity</h3>
+                    <p style="font-size: 2.5rem; font-weight: 700;">${data.humidity}%</p>
+                    <p style="color: #6366f1; font-size: 0.9rem; margin-top: 0.5rem;">${data.humidity > 80 ? '⚠️ High Risk' : 'Optimal Balance'}</p>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 1rem;">Soil Moisture</h3>
+                    <p style="font-size: 2.5rem; font-weight: 700;">${data.soilMoisture}%</p>
+                    <div class="progress-container" style="width: 100%; margin-top: 1rem;">
+                        <div class="progress-bar" style="width: ${data.soilMoisture}%; background: ${data.soilMoisture < 40 ? '#ef4444' : '#16a34a'};"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 1rem;">Real-time Insight</h3>
+                    <p style="font-size: 1.1rem; font-weight: 600; line-height: 1.4;">
+                        ${data.rainExpected ? '⛈️ Rain expected. Recommend holding off on chemical spray.' : '⛅ Perfect conditions for routine crop inspection.'}
+                    </p>
+                </div>
+            `;
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.district-btn').forEach(btn => {
+            btn.onclick = () => {
+                // UI Toggle
+                document.querySelectorAll('.district-btn').forEach(b => {
+                    b.className = 'btn btn-ghost district-btn';
+                    b.style.border = '1px solid #e2e8f0';
+                    b.style.color = 'var(--text-main)';
+                });
+                btn.className = 'btn btn-primary district-btn';
+                btn.style.border = 'none';
+                btn.style.color = '#ffffff'; // Keep white but let's make the background slightly darker in next step if needed
+                // Actually, let's just make it dark for perfect contrast as requested
+                btn.style.color = '#064e3b'; 
+                
+                currentDistrict = btn.getAttribute('data-district');
+                fetchWeather(currentDistrict);
+            };
+        });
+
+        document.getElementById('btn-refresh').onclick = () => fetchWeather(currentDistrict);
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialBtn = document.querySelector('.district-btn[data-district="Bengaluru Rural"]');
+            if (initialBtn) initialBtn.style.color = '#064e3b';
+            fetchWeather(currentDistrict);
+        });
+    </script>
+</body>
+</html>

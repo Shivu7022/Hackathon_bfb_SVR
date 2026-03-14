@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Your Crop | Krishi-Vision 360</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body class="page-wrapper">
+    <header class="internal-header">
+        <a href="index.html" class="btn-back">← Back to Home</a>
+        <div class="logo-container" style="position: static;">
+            <span class="logo-icon">🍃</span>
+            <span>Krishi-Vision 360</span>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <div class="card">
+            <h2>📍 1. Farm Context</h2>
+            <div class="row">
+                <div>
+                    <label for="crop">Crop Type</label>
+                    <select id="crop">
+                        <option value="tomato">Tomato</option>
+                        <option value="rice">Rice</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Location (GPS)</label>
+                    <button id="btn-gps" class="btn-secondary" style="width: 100%; height: 45px;">📍 Detect My Location</button>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 10px;">
+                <div>
+                    <label for="lat">Latitude</label>
+                    <input id="lat" type="number" step="0.000001" placeholder="12.9716">
+                </div>
+                <div>
+                    <label for="lon">Longitude</label>
+                    <input id="lon" type="number" step="0.000001" placeholder="77.5946">
+                </div>
+            </div>
+            <div class="row">
+                <div>
+                    <label for="soil-ph">Soil pH</label>
+                    <input id="soil-ph" type="number" step="0.1" placeholder="6.5">
+                </div>
+                <div>
+                    <label for="soil-n">Nitrogen Level</label>
+                    <select id="soil-n">
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📷 2. Capture Leaf Image</h2>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button id="btn-start-camera" class="btn-secondary">Open Camera</button>
+                <label for="file-input" class="btn-secondary" style="cursor: pointer; display: flex; align-items: center;">Upload Image</label>
+                <input id="file-input" type="file" accept="image/*" style="display: none;">
+                <button id="btn-capture" class="btn-primary">Capture</button>
+            </div>
+            <video id="video" autoplay playsinline style="display: none;"></video>
+            <canvas id="canvas" style="display: none;"></canvas>
+            <img id="preview" alt="Preview" style="display: none;">
+        </div>
+
+        <div style="text-align: right; margin-top: 20px;">
+            <button id="btn-next-to-analyze" class="btn-cta" style="padding: 12px 40px;">
+                Analyze Result →
+            </button>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

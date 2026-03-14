@@ -2,20 +2,38 @@ import express from "express";
 import cors from "cors";
 import axios from "axios";
 import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { buildRecommendation } from "./recommendationEngine.js";
 
-dotenv.config();
+dotenv.config({ override: true });
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY || "YOUR_OPENWEATHER_KEY_HERE";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
+const HISTORY_FILE = path.join(process.cwd(), "history.json");
+
+// Ensure history file exists
+if (!fs.existsSync(HISTORY_FILE)) {
+  fs.writeFileSync(HISTORY_FILE, JSON.stringify([]));
+}
+
+function saveToHistory(record) {
+  try {
+    const data = JSON.parse(fs.readFileSync(HISTORY_FILE, "utf-8"));
+    data.unshift({ ...record, timestamp: new Date().toISOString() });
+    fs.writeFileSync(HISTORY_FILE, JSON.stringify(data.slice(0, 50), null, 2));
+  } catch (err) {
+    console.error("Error saving to history:", err);
+  }
+}
 
 const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
 // const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://localhost:8002";
 // const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "https://blue-regions-pay.loca.lt";
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://10.69.91.198:8002";
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://10.69.91.198:8000";
 
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
@@ -160,7 +178,7 @@ app.post("/api/predict-and-recommend", async (req, res) => {
       history: Array.isArray(history) ? history : []
     });
 
-    return res.json({
+    const finalResult = {
       success: true,
       mlResult: {
         crop: detectedCrop,
@@ -172,7 +190,19 @@ app.post("/api/predict-and-recommend", async (req, res) => {
       },
       weather,
       recommendation
+    };
+
+    // Persist to history
+    saveToHistory({
+      crop: detectedCrop || crop,
+      disease: label,
+      severity,
+      region: location?.region || "Local Farm",
+      weather,
+      recommendation
     });
+
+    return res.json(finalResult);
   } catch (err) {
     console.error("Error in /api/predict-and-recommend:", err);
     return res.status(500).json({ error: "Internal server error" });
@@ -192,6 +222,39 @@ app.post("/api/debug/ml", async (req, res) => {
     console.error("Error in /api/debug/ml:", err);
     return res.status(500).json({ error: "Internal server error" });
   }
+});
+
+const KARNATAKA_DISTRICTS = {
+  "Bengaluru Rural": { lat: 13.2503, lon: 77.2982 },
+  "Mysuru": { lat: 12.2958, lon: 76.6394 },
+  "Belagavi": { lat: 15.8497, lon: 74.4977 },
+  "Dharwad": { lat: 15.4589, lon: 75.0078 },
+  "Raichur": { lat: 16.2120, lon: 77.3439 },
+  "Shimoga": { lat: 13.9298, lon: 75.5681 }
+};
+
+app.get("/api/weather", async (req, res) => {
+  const districtName = req.query.district || "Bengaluru Rural";
+  const coords = KARNATAKA_DISTRICTS[districtName];
+
+  if (!coords) {
+    return res.status(404).json({ success: false, error: "District not found in Karnataka mapping" });
+  }
+
+  const weather = await fetchWeather(coords.lat, coords.lon);
+  if (!weather) {
+    return res.status(500).json({ success: false, error: "Failed to fetch weather data" });
+  }
+
+  // Add simulated sensor data for dashboard
+  const sensorData = {
+    ...weather,
+    soilMoisture: Math.floor(Math.random() * (60 - 30) + 30),
+    lightIntensity: Math.floor(Math.random() * (1000 - 400) + 400),
+    district: districtName
+  };
+
+  return res.json({ success: true, data: sensorData });
 });
 
 app.post("/api/chat", (req, res) => {
@@ -235,6 +298,15 @@ app.post("/api/chat", (req, res) => {
     success: true,
     reply: replyEn
   });
+});
+
+app.get("/api/history", (req, res) => {
+  try {
+    const data = JSON.parse(fs.readFileSync(HISTORY_FILE, "utf-8"));
+    res.json({ success: true, history: data });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to read history" });
+  }
 });
 
 app.get("/api/health", (req, res) => {

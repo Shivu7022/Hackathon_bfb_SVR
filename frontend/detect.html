@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disease Detection | CropGuard AI</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <header class="main-header">
+        <a href="index.html" class="logo-group">
+            <div class="logo-icon">🌿</div>
+            <span>CropGuard AI</span>
+        </a>
+        <button id="menu-toggle" class="menu-toggle">☰</button>
+        <nav id="nav-links" class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="detect.html" class="nav-link active">Disease Detection</a>
+            <a href="dashboard.html" class="nav-link">Sensor Dashboard</a>
+            <a href="health.html" class="nav-link">Crop Health</a>
+            <a href="assistant.html" class="nav-link">AI Assistant</a>
+        </nav>
+        <div style="width: 150px; text-align: right; display: none;">
+            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Sign In</button>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h1 style="font-size: 2.25rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">
+                AI Disease <span style="color: var(--primary);">Detection</span>
+            </h1>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                Upload a plant leaf image for instant AI-powered disease analysis.
+            </p>
+
+            <div class="detection-layout">
+                <!-- Data Input Card -->
+                <div class="card">
+                    <div id="upload-trigger" class="upload-zone" onclick="document.getElementById('file-input').click()">
+                        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">📤</div>
+                        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Drop leaf image here</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">or click to browse files</p>
+                        <input type="file" id="file-input" style="display: none;" accept="image/*" onchange="handleFileUpload(event)">
+                    </div>
+
+                    <video id="video-feed" style="display: none; width: 100%; border-radius: 12px; margin-bottom: 1rem;"></video>
+
+                    <div id="image-preview-container" style="display: none; margin-top: 1.5rem;">
+                        <img id="preview" src="" alt="Preview" style="width: 100%; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <div style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 1rem;">
+                            <button id="btn-start-camera" class="btn btn-primary" style="flex: 1; min-width: 150px;">
+                                📷 Retake Photo
+                            </button>
+                            <button id="btn-upload-new" class="btn btn-ghost" style="flex: 1; min-width: 150px; border: 1px solid var(--border-color);" onclick="document.getElementById('file-input').click()">
+                                📁 Upload Different
+                            </button>
+                            <button id="btn-analyze" class="btn btn-primary" style="flex: 1; min-width: 150px; background: #6366f1;">
+                                🧠 Analyze Leaf
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem;">Target Crop</label>
+                        <select id="crop" class="form-input" style="width: 100%;">
+                            <option value="tomato">Tomato</option>
+                            <option value="potato">Potato</option>
+                            <option value="rice">Rice</option>
+                            <option value="wheat">Wheat</option>
+                            <option value="corn">Corn</option>
+                            <option value="apple">Apple</option>
+                            <option value="grape">Grape</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Analysis Results Card -->
+                <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 400px;">
+                    <div id="result-placeholder">
+                        <div style="font-size: 3rem; color: #e2e8f0; margin-bottom: 1rem;">🔍</div>
+                        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">No Analysis Yet</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 300px;">
+                            Upload a leaf image and click "Analyze Leaf" to get started.
+                        </p>
+                    </div>
+                    <div id="result" style="display: none; text-align: left; width: 100%;">
+                        <!-- Results injected by app.js -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <video id="video" style="display: none;"></video>
+    <canvas id="canvas" style="display: none;"></canvas>
+
+    <script src="app.js"></script>
+    <script src="krishibot.js"></script>
+</body>
+</html>

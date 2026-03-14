@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Analysis | Krishi-Vision 360</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body class="page-wrapper">
+    <header class="internal-header">
+        <a href="scan.html" class="btn-back">← Back to Scan</a>
+        <div class="logo-container" style="position: static;">
+            <span class="logo-icon">🍃</span>
+            <span>Krishi-Vision 360</span>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <div class="card">
+            <h2>🧪 3. Get Diagnosis</h2>
+            <div id="result" class="result-box">
+                ⏳ Loading your data and preparing analysis...
+            </div>
+            
+            <div id="dynamic-buttons" style="margin-top: 20px; display: none;">
+                 <button id="btn-re-analyze" class="btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;">Run Analysis Again</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💬 4. Chat with KrishiBot</h2>
+            <label for="language">Select Language</label>
+            <select id="language">
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+                <option value="kn">Kannada</option>
+                <option value="ta">Tamil</option>
+                <option value="mr">Marathi</option>
+                <option value="pa">Punjabi</option>
+            </select>
+            <div id="chat-window" class="chat-window"></div>
+            <div class="row" style="grid-template-columns: 1fr auto;">
+                <input id="chat-input" type="text" placeholder="Ask KrishiBot about treatments...">
+                <button id="btn-send-chat" class="btn-primary">Send ➤</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script src="krishibot.js"></script>
+</body>
+</html>

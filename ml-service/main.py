@@ -198,47 +198,55 @@ def decode_image(img_b64: str) -> Image.Image:
 @app.post("/predict")
 def predict(req: PredictRequest):
     try:
-        img = decode_image(req.imageBase64)
+        try:
+            img = decode_image(req.imageBase64)
+        except Exception as e:
+            return {
+                "success": False,
+                "error": f"Could not decode image: {e}",
+            }
+
+        # 1. Run YOLO to find bounding box
+        det = run_yolov4(img, req.crop)
+        
+        # 2. Run ResNet for final classification
+        disease_key, confidence = run_resnet(img)
+        
+        if disease_key is None:
+            disease_key = det["class_name"]
+            confidence = float(det.get("confidence", 0.7))
+        label = disease_key.replace("_", " ").title()
+
+        severity = "mild"
+        if confidence > 0.85:
+            severity = "severe"
+        elif confidence > 0.7:
+            severity = "moderate"
+
+        crop_name = (req.crop or "unknown").lower()
+        if "tomato" in disease_key:
+            crop_name = "tomato"
+        elif "potato" in disease_key:
+            crop_name = "potato"
+        elif "pepper" in disease_key:
+            crop_name = "pepper"
+
+        return {
+            "success": True,
+            "crop": crop_name,
+            "disease": disease_key,
+            "label": label,
+            "confidence": confidence,
+            "severity": severity,
+        }
     except Exception as e:
+        import traceback
+        print(traceback.format_exc())
         return {
             "success": False,
-            "error": f"Could not decode image: {e}",
+            "error": f"Internal ML service error: {str(e)}",
+            "traceback": traceback.format_exc()
         }
-
-    # 1. Run YOLO to find bounding box
-    det = run_yolov4(img, req.crop)
-    yolo_box = det.get("box") # Modification needed in run_yolov4 if we want accurate crops
-    
-    # 2. Run ResNet for final classification
-    disease_key, confidence = run_resnet(img)
-    
-    if disease_key is None:
-        disease_key = det["class_name"]
-        confidence = float(det.get("confidence", 0.7))
-    label = disease_key.replace("_", " ").title()
-
-    severity = "mild"
-    if confidence > 0.85:
-        severity = "severe"
-    elif confidence > 0.7:
-        severity = "moderate"
-
-    crop_name = (req.crop or "unknown").lower()
-    if "tomato" in disease_key:
-        crop_name = "tomato"
-    elif "potato" in disease_key:
-        crop_name = "potato"
-    elif "pepper" in disease_key:
-        crop_name = "pepper"
-
-    return {
-        "success": True,
-        "crop": crop_name,
-        "disease": disease_key,
-        "label": label,
-        "confidence": confidence,
-        "severity": severity,
-    }
 
 
 @app.get("/health")
